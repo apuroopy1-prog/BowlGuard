@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BowlGuard — Protect Your Bowling Arm</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/log.css">
+  <link rel="stylesheet" href="css/history.css">
+  <link rel="stylesheet" href="css/ai.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/onboarding.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ========== ONBOARDING SCREEN ========== -->
+  <div id="screen-onboarding" class="screen onboarding-screen" style="display:none;">
+    <div class="onboarding-container">
+      <div class="onboarding-header">
+        <div class="onboarding-icon">🏏</div>
+        <h1>Welcome to BowlGuard</h1>
+        <p>Tell us about yourself so we can personalize your workload advice</p>
+      </div>
+
+      <div class="onboarding-form">
+        <div class="onboarding-field">
+          <label>Your Name</label>
+          <input type="text" id="profile-name" placeholder="e.g. Jasprit" autocomplete="off">
+        </div>
+
+        <div class="onboarding-field">
+          <label>Age</label>
+          <input type="number" id="profile-age" placeholder="e.g. 19" min="10" max="50">
+        </div>
+
+        <div class="onboarding-field">
+          <label>Bowling Type</label>
+          <div class="onboarding-options" id="profile-type">
+            <button class="onboarding-opt" data-val="fast" onclick="Profile.selectOption('type', 'fast', this)">Fast</button>
+            <button class="onboarding-opt" data-val="medium-fast" onclick="Profile.selectOption('type', 'medium-fast', this)">Medium-Fast</button>
+            <button class="onboarding-opt" data-val="medium" onclick="Profile.selectOption('type', 'medium', this)">Medium</button>
+            <button class="onboarding-opt" data-val="spin" onclick="Profile.selectOption('type', 'spin', this)">Spin</button>
+          </div>
+        </div>
+
+        <div class="onboarding-field">
+          <label>Years of Bowling</label>
+          <div class="onboarding-options" id="profile-experience">
+            <button class="onboarding-opt" data-val="0-2" onclick="Profile.selectOption('experience', '0-2', this)">0-2 yrs</button>
+            <button class="onboarding-opt" data-val="3-5" onclick="Profile.selectOption('experience', '3-5', this)">3-5 yrs</button>
+            <button class="onboarding-opt" data-val="6-10" onclick="Profile.selectOption('experience', '6-10', this)">6-10 yrs</button>
+            <button class="onboarding-opt" data-val="10+" onclick="Profile.selectOption('experience', '10+', this)">10+ yrs</button>
+          </div>
+        </div>
+
+        <div class="onboarding-field">
+          <label>Playing Level</label>
+          <div class="onboarding-options" id="profile-level">
+            <button class="onboarding-opt" data-val="club" onclick="Profile.selectOption('level', 'club', this)">Club</button>
+            <button class="onboarding-opt" data-val="district" onclick="Profile.selectOption('level', 'district', this)">District</button>
+            <button class="onboarding-opt" data-val="state" onclick="Profile.selectOption('level', 'state', this)">State</button>
+            <button class="onboarding-opt" data-val="national" onclick="Profile.selectOption('level', 'national', this)">National</button>
+          </div>
+        </div>
+
+        <div class="onboarding-field">
+          <label>Previous Injuries?</label>
+          <div class="onboarding-options" id="profile-has-injury">
+            <button class="onboarding-opt" data-val="no" onclick="Profile.toggleInjury(false, this)">No injuries</button>
+            <button class="onboarding-opt" data-val="yes" onclick="Profile.toggleInjury(true, this)">Yes, had injuries</button>
+          </div>
+        </div>
+
+        <div class="onboarding-field" id="injury-details" style="display:none;">
+          <label>Which areas? (select all that apply)</label>
+          <div class="onboarding-options multi" id="profile-injuries">
+            <button class="onboarding-opt" data-val="back" onclick="Profile.toggleMulti('injuries', 'back', this)">Lower Back</button>
+            <button class="onboarding-opt" data-val="shoulder" onclick="Profile.toggleMulti('injuries', 'shoulder', this)">Shoulder</button>
+            <button class="onboarding-opt" data-val="knee" onclick="Profile.toggleMulti('injuries', 'knee', this)">Knee</button>
+            <button class="onboarding-opt" data-val="ankle" onclick="Profile.toggleMulti('injuries', 'ankle', this)">Ankle</button>
+            <button class="onboarding-opt" data-val="hamstring" onclick="Profile.toggleMulti('injuries', 'hamstring', this)">Hamstring</button>
+            <button class="onboarding-opt" data-val="groin" onclick="Profile.toggleMulti('injuries', 'groin', this)">Groin</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="onboarding-submit" onclick="Profile.save()">Start Tracking</button>
+    </div>
+  </div>
+
+  <!-- TOP NAV -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <svg viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="13" stroke="#3b82f6" stroke-width="2"/>
+        <circle cx="14" cy="14" r="6" fill="#3b82f6" opacity="0.3"/>
+        <path d="M14 4 L14 8 M14 20 L14 24 M4 14 L8 14 M20 14 L24 14" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>Bowl<span class="accent">Guard</span></span>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="BowlGuard.exportData()" title="Export CSV">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== DASHBOARD SCREEN ========== -->
+  <div id="screen-dashboard" class="screen active">
+    <div class="greeting">
+      <h1 id="greeting-text">Good morning 🏏</h1>
+      <p id="greeting-sub">Here's your bowling load status</p>
+    </div>
+
+    <!-- ACWR Card -->
+    <div id="acwr-card" class="acwr-card neutral">
+      <div class="acwr-label">Workload Ratio (ACWR)</div>
+      <div id="acwr-value" class="acwr-value">—</div>
+      <div id="acwr-status" class="acwr-status">No data yet</div>
+      <div id="acwr-rec" class="acwr-recommendation">Log your first session to see your workload status</div>
+      <div id="acwr-badge" class="acwr-badge" style="display:none;"></div>
+    </div>
+
+    <!-- AI Recommendation Card -->
+    <div id="ai-card" class="ai-card" style="display:none;">
+      <div class="ai-card-header">
+        <div class="ai-card-icon">🧠</div>
+        <div>
+          <div class="ai-card-title">AI Recommendation</div>
+          <div class="ai-card-subtitle" id="ai-subtitle">Based on your recent data</div>
+        </div>
+        <button class="ai-refresh-btn" onclick="BowlGuard.AI.getRecommendation()" title="Refresh">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+      </div>
+      <div id="ai-content" class="ai-card-content">
+        <div class="ai-loading">Analyzing your data...</div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div id="stat-acute" class="stat-value">0</div>
+        <div class="stat-label">This Week</div>
+      </div>
+      <div class="stat-card">
+        <div id="stat-chronic" class="stat-value">0</div>
+        <div class="stat-label">4-Wk Avg</div>
+      </div>
+      <div class="stat-card">
+        <div id="stat-sessions" class="stat-value">0</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+    </div>
+
+    <!-- Weekly Chart -->
+    <div class="week-chart">
+      <div class="section-header">
+        <span class="section-title">Last 7 Days</span>
+        <span class="section-subtitle">Balls bowled</span>
+      </div>
+      <div id="chart-bars" class="chart-bars"></div>
+    </div>
+
+    <!-- Latest Soreness -->
+    <div class="soreness-card">
+      <div class="section-header">
+        <span class="section-title">Latest Soreness</span>
+        <span id="soreness-date" class="section-subtitle">No data</span>
+      </div>
+      <div id="soreness-display" class="soreness-grid">
+        <div class="soreness-item"><span class="soreness-zone">Shoulder</span><span class="soreness-value low">—</span></div>
+        <div class="soreness-item"><span class="soreness-zone">Lower Back</span><span class="soreness-value low">—</span></div>
+        <div class="soreness-item"><span class="soreness-zone">Knee</span><span class="soreness-value low">—</span></div>
+        <div class="soreness-item"><span class="soreness-zone">Ankle</span><span class="soreness-value low">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== LOG SESSION SCREEN ========== -->
+  <div id="screen-log" class="screen">
+    <div class="log-header">
+      <h2>Log Session 🏏</h2>
+      <p>Track your bowling workload</p>
+    </div>
+
+    <!-- Session Type -->
+    <div class="log-section">
+      <div class="log-section-title">Session Type</div>
+      <div class="session-type-toggle">
+        <button class="session-type-btn active" onclick="BowlGuard.Log.setSessionType('nets', this)">🥅 Nets</button>
+        <button class="session-type-btn" onclick="BowlGuard.Log.setSessionType('match', this)">🏟️ Match</button>
+      </div>
+    </div>
+
+    <!-- Input Mode Toggle -->
+    <div class="log-section">
+      <div class="log-section-title">Bowling Load</div>
+      <div class="session-type-toggle" style="margin-bottom: 16px;">
+        <button id="mode-overs-btn" class="session-type-btn active" onclick="BowlGuard.Log.setInputMode('overs')">Overs Input</button>
+        <button id="mode-live-btn" class="session-type-btn" onclick="BowlGuard.Log.setInputMode('live')">Live Counter</button>
+      </div>
+
+      <!-- Overs Input -->
+      <div id="overs-input" class="overs-input-group">
+        <button class="overs-btn" onclick="BowlGuard.Log.adjustOvers(-1)">−</button>
+        <div class="overs-display">
+          <div id="overs-number" class="overs-number">0</div>
+          <div class="overs-unit">overs</div>
+        </div>
+        <button class="overs-btn" onclick="BowlGuard.Log.adjustOvers(1)">+</button>
+      </div>
+      <div id="balls-display" class="balls-converted">= 0 balls</div>
+
+      <!-- Live Counter -->
+      <div id="live-counter" class="live-counter">
+        <button class="tap-btn" onclick="BowlGuard.Log.tapBall()">
+          <span id="tap-count" class="tap-count">0</span>
+          <span class="tap-label">Tap per ball</span>
+        </button>
+        <div class="tap-info">Tap the button each time a delivery is bowled</div>
+        <button class="tap-reset" onclick="BowlGuard.Log.resetTap()">Reset Counter</button>
+      </div>
+    </div>
+
+    <!-- Intensity -->
+    <div class="log-section">
+      <div class="log-section-title">Bowling Intensity</div>
+      <div class="intensity-slider-container">
+        <div class="intensity-header">
+          <span class="intensity-label">How hard did you bowl?</span>
+          <span id="intensity-value" class="intensity-value low">5</span>
+        </div>
+        <input type="range" id="intensity-slider" min="1" max="10" value="5" oninput="BowlGuard.Log.updateIntensity(this.value)">
+        <div class="intensity-labels">
+          <span>Light</span>
+          <span>Moderate</span>
+          <span>Full Effort</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Soreness -->
+    <div class="log-section">
+      <div class="log-section-title">Body Soreness</div>
+      <div class="soreness-input-grid" id="soreness-inputs"></div>
+    </div>
+
+    <button class="submit-btn" onclick="BowlGuard.Log.submit()">Log Session →</button>
+  </div>
+
+  <!-- ========== HISTORY SCREEN ========== -->
+  <div id="screen-history" class="screen">
+    <div class="log-header">
+      <h2>Session History 📋</h2>
+      <p>All your logged sessions</p>
+    </div>
+    <div id="history-list" class="history-list"></div>
+    <button class="clear-data-btn" onclick="BowlGuard.clearAllData()">Clear All Data</button>
+  </div>
+
+  <!-- ========== CHAT SCREEN ========== -->
+  <div id="screen-chat" class="screen">
+    <div class="chat-container">
+      <div id="chat-messages" class="chat-messages">
+        <div class="chat-welcome">
+          <div class="chat-welcome-icon">🧠</div>
+          <div class="chat-welcome-title">BowlGuard AI</div>
+          <div class="chat-welcome-text">Ask me anything about your bowling workload</div>
+        </div>
+        <div class="chat-suggestions">
+          <button class="chat-suggestion" onclick="Chat.sendSuggestion(this)">Can I bowl a full match Saturday?</button>
+          <button class="chat-suggestion" onclick="Chat.sendSuggestion(this)">Is my workload too high this week?</button>
+          <button class="chat-suggestion" onclick="Chat.sendSuggestion(this)">Should I rest tomorrow?</button>
+        </div>
+      </div>
+      <div class="chat-input-bar">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Ask about your workload..." autocomplete="off" onkeydown="if(event.key==='Enter')Chat.send()">
+        <button class="chat-send-btn" onclick="Chat.send()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="bottom-nav-item active" onclick="BowlGuard.navigate('dashboard', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Dashboard</span>
+    </button>
+    <button class="bottom-nav-item" onclick="BowlGuard.navigate('log', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Log Session</span>
+    </button>
+    <button class="bottom-nav-item" onclick="BowlGuard.navigate('chat', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Ask AI</span>
+    </button>
+    <button class="bottom-nav-item" onclick="BowlGuard.navigate('history', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>History</span>
+    </button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+</div>
+
+<!-- JS Modules -->
+<script src="js/store.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/acwr.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/log.js"></script>
+<script src="js/history.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

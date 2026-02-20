@@ -1,0 +1,103 @@
+/* ========== GREETING ========== */
+.greeting { margin-bottom: 24px; }
+.greeting h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.greeting p { color: var(--text-secondary); font-size: 14px; }
+
+/* ========== ACWR CARD ========== */
+.acwr-card {
+  border-radius: 20px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.acwr-card.green { background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid var(--green-border); }
+.acwr-card.yellow { background: linear-gradient(135deg, rgba(234,179,8,0.08), rgba(234,179,8,0.02)); border: 1px solid var(--yellow-border); }
+.acwr-card.red { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02)); border: 1px solid var(--red-border); }
+.acwr-card.neutral { background: var(--bg-card); border: 1px solid var(--border); }
+
+.acwr-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 12px; }
+
+.acwr-value { font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+.acwr-card.green .acwr-value { color: var(--green); }
+.acwr-card.yellow .acwr-value { color: var(--yellow); }
+.acwr-card.red .acwr-value { color: var(--red); }
+.acwr-card.neutral .acwr-value { color: var(--text-muted); }
+
+.acwr-status { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.acwr-recommendation { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+.acwr-badge {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+
+.acwr-card.green .acwr-badge { background: var(--green-bg); }
+.acwr-card.yellow .acwr-badge { background: var(--yellow-bg); }
+.acwr-card.red .acwr-badge { background: var(--red-bg); }
+
+/* ========== STATS ROW ========== */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-value { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ========== WEEKLY CHART ========== */
+.week-chart {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.chart-bars { display: flex; align-items: flex-end; justify-content: space-between; height: 140px; gap: 8px; margin-bottom: 12px; }
+
+.chart-bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 6px; }
+
+.chart-bar { width: 100%; max-width: 36px; border-radius: 8px 8px 4px 4px; min-height: 4px; transition: height 0.5s ease; }
+.chart-bar.green { background: linear-gradient(to top, var(--green), rgba(34,197,94,0.6)); }
+.chart-bar.yellow { background: linear-gradient(to top, var(--yellow), rgba(234,179,8,0.6)); }
+.chart-bar.red { background: linear-gradient(to top, var(--red), rgba(239,68,68,0.6)); }
+.chart-bar.empty { background: var(--border); }
+
+.chart-bar-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.chart-bar-value { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-secondary); }
+
+/* ========== SORENESS DISPLAY ========== */
+.soreness-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.soreness-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.soreness-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+}
+
+.soreness-zone { font-size: 13px; font-weight: 500; }
+
+.soreness-value { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+.soreness-value.low { color: var(--green); background: var(--green-bg); }
+.soreness-value.med { color: var(--yellow); background: var(--yellow-bg); }
+.soreness-value.high { color: var(--red); background: var(--red-bg); }
