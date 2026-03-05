@@ -1,14 +1,6 @@
-# macOS
-.DS_Store
-
-# Environment
 .env
-*.env
-
-# Python
 __pycache__/
 *.pyc
-*.pyo
-
-# Logs
-*.log
+.venv/
+venv/
+.DS_Store
